@@ -16,6 +16,10 @@ __dependencies__ = []
 http = urllib3.PoolManager()
 
 
+def _get_icon(icon_name):
+    return os.path.dirname(__file__) + "/icons/{}.svg".format(icon_name)
+
+
 def handleQuery(query):
     if query.isTriggered:
         if len(query.string.strip()) >= 3:
@@ -26,7 +30,7 @@ def handleQuery(query):
         else:
             return Item(
                 id=__prettyname__,
-                icon=os.path.dirname(__file__) + "/movie.svg",
+                icon=_get_icon("movie"),
                 text=__prettyname__,
                 subtext="Type in the movie name",
                 completion=query.rawString,
@@ -53,14 +57,14 @@ def searchMovies(query):
     itemArr = []
     if data["Response"] == "True":
         for movieItem in data["Search"]:
-            tempItem = Item(
+            temp_item = Item(
                 id=__prettyname__,
-                icon=os.path.dirname(__file__) + "/movie.svg",
+                icon=_get_icon("movie"),
                 text="{}".format(movieItem["Title"]),
                 subtext="{}".format(movieItem["Type"]),
                 completion=__trigger__ + "id: " + movieItem["imdbID"],
             )
-            itemArr.append(tempItem)
+            itemArr.append(temp_item)
 
         return itemArr
     else:
@@ -74,7 +78,6 @@ def searchMovies(query):
 
 
 def movieInfo(mid):
-    Warning(mid)
     qurl = "http://www.omdbapi.com/?i={}&apikey=e389610c".format(mid)
     try:
         res = http.request("GET", qurl)
@@ -97,7 +100,7 @@ def movieInfo(mid):
         itemArr.append(
             Item(
                 id=__prettyname__,
-                icon=os.path.dirname(__file__) + "/movie.svg",
+                icon=_get_icon("movie"),
                 text=data["Title"],
                 subtext="Title",
             )
@@ -106,7 +109,7 @@ def movieInfo(mid):
         itemArr.append(
             Item(
                 id=__prettyname__,
-                icon=os.path.dirname(__file__) + "/genre.svg",
+                icon=_get_icon("genre"),
                 text=data["Genre"],
                 subtext="Genre",
             )
@@ -115,7 +118,7 @@ def movieInfo(mid):
         itemArr.append(
             Item(
                 id=__prettyname__,
-                icon=os.path.dirname(__file__) + "/director.svg",
+                icon=_get_icon("director"),
                 text=data["Director"],
                 subtext="Director",
             )
@@ -124,7 +127,7 @@ def movieInfo(mid):
         itemArr.append(
             Item(
                 id=__prettyname__,
-                icon=os.path.dirname(__file__) + "/actors.svg",
+                icon=_get_icon("actors"),
                 text=data["Actors"],
                 subtext="Actors",
             )
@@ -133,7 +136,7 @@ def movieInfo(mid):
         itemArr.append(
             Item(
                 id=__prettyname__,
-                icon=os.path.dirname(__file__) + "/plot.svg",
+                icon=_get_icon("plot"),
                 text=data["Plot"],
                 subtext="Plot",
             )
@@ -142,7 +145,7 @@ def movieInfo(mid):
         itemArr.append(
             Item(
                 id=__prettyname__,
-                icon=os.path.dirname(__file__) + "/awards.svg",
+                icon=_get_icon("awards"),
                 text=data["Awards"],
                 subtext="Awards",
             )
@@ -151,20 +154,20 @@ def movieInfo(mid):
         itemArr.append(
             Item(
                 id=__prettyname__,
-                icon=os.path.dirname(__file__) + "/metacritic.svg",
+                icon=_get_icon("metacritic"),
                 text=data["Metascore"],
                 subtext="Metascore",
             )
         )
         # Append imdbRating
-        imdbURL = "https://www.imdb.com/title/" + mid
+        imdb_url = "https://www.imdb.com/title/" + mid
         itemArr.append(
             Item(
                 id=__prettyname__,
-                icon=os.path.dirname(__file__) + "/imdb.svg",
+                icon=_get_icon("imdb"),
                 text=data["imdbRating"],
                 subtext="IMDB Rating, Click to open on IMDB",
-                actions=[UrlAction("Open article on Wikipedia", imdbURL)],
+                actions=[UrlAction("Open article on Wikipedia", imdb_url)],
             )
         )
         # TODO : Append Rotten tomatoes rating
