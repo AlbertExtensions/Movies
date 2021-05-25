@@ -1,17 +1,16 @@
 """Movies Extension: Get's movie ratings and info from omdb api"""
 
-from albertv0 import *
+from albert import *
 
 import urllib3
 import json
 import os
 
-__iid__ = "PythonInterface/v0.1"
-__prettyname__ = "Movie"
-__version__ = "0.1"
-__trigger__ = "m "
-__author__ = "Bharat Kalluri"
-__dependencies__ = []
+__prettyname__ = "Movies"
+__title__ = "Movies"
+__version__ = "0.1.0"
+__triggers__ = "m "
+__authors__ = "Bharat Kalluri"
 
 http = urllib3.PoolManager()
 
@@ -62,7 +61,7 @@ def searchMovies(query):
                 icon=_get_icon("movie"),
                 text="{}".format(movieItem["Title"]),
                 subtext="{}".format(movieItem["Type"]),
-                completion=__trigger__ + "id: " + movieItem["imdbID"],
+                completion=__triggers__ + "id: " + movieItem["imdbID"],
             )
             itemArr.append(temp_item)
 
