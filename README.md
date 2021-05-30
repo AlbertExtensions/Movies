@@ -4,7 +4,7 @@
 
 ## Usage
 
-![Workflow Screenshot](demo.webm)
+![Workflow Screenshot](demo.gif)
 
 ## Features
 
