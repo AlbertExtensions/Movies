@@ -1,6 +1,6 @@
-"""Movies Extension: Get's movie ratings and info from omdb api"""
+"""Movies Extension: Gets movie ratings and info from OMDB api"""
 
-from albert import *
+from albert import Item, critical, iconLookup, UrlAction
 
 import urllib3
 import json
@@ -37,9 +37,11 @@ def handleQuery(query):
 
 
 def searchMovies(query):
-    qurl = "http://www.omdbapi.com/?s={}&apikey=e389610c".format(query.string.strip())
+    query_url = "http://www.omdbapi.com/?s={}&apikey=e389610c".format(
+        query.string.strip()
+    )
     try:
-        res = http.request("GET", qurl)
+        res = http.request("GET", query_url)
         data = json.loads(res.data)
     except:
         critical("No Internet!")
@@ -55,17 +57,16 @@ def searchMovies(query):
 
     itemArr = []
     if data["Response"] == "True":
-        for movieItem in data["Search"]:
-            temp_item = Item(
+        return [
+            Item(
                 id=__prettyname__,
                 icon=_get_icon("movie"),
-                text="{}".format(movieItem["Title"]),
-                subtext="{}".format(movieItem["Type"]),
-                completion=__triggers__ + "id: " + movieItem["imdbID"],
+                text="{}".format(mediaItem["Title"]),
+                subtext=f"Type: {mediaItem['Type'].capitalize()}. Press tab for more info!",
+                completion=__triggers__ + "id: " + mediaItem["imdbID"],
             )
-            itemArr.append(temp_item)
-
-        return itemArr
+            for mediaItem in data["Search"]
+        ]
     else:
         return Item(
             id=__prettyname__,
@@ -77,9 +78,9 @@ def searchMovies(query):
 
 
 def movieInfo(mid):
-    qurl = "http://www.omdbapi.com/?i={}&apikey=e389610c".format(mid)
+    query_url = "http://www.omdbapi.com/?i={}&apikey=e389610c".format(mid)
     try:
-        res = http.request("GET", qurl)
+        res = http.request("GET", query_url)
         data = json.loads(res.data)
     except:
         critical("No Internet!")
@@ -184,4 +185,3 @@ def movieInfo(mid):
         ]
 
     return Item(id=__prettyname__, icon=iconLookup("dialog-warning"), text=str(mid))
-
